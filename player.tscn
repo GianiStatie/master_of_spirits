@@ -1,0 +1,143 @@
+[gd_scene load_steps=18 format=3 uid="uid://k5hm25gnsg4n"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_bayly"]
+[ext_resource type="Texture2D" uid="uid://djyjpab3jbo4i" path="res://assets/player/Yoh-Sheet.png" id="2_nht2m"]
+
+[sub_resource type="Animation" id="Animation_sc8n3"]
+resource_name = "Drift"
+length = 0.45
+step = 0.15
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [11, 12, 13]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.45),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"unset_player_drift"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_4x480"]
+resource_name = "Idle"
+length = 0.88
+loop_mode = 1
+step = 0.22
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.22, 0.44, 0.66),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 1]
+}
+
+[sub_resource type="Animation" id="Animation_4rola"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_f601f"]
+resource_name = "Run"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [3, 4, 5, 6, 7, 8, 9, 10]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hluul"]
+_data = {
+"Drift": SubResource("Animation_sc8n3"),
+"Idle": SubResource("Animation_4x480"),
+"RESET": SubResource("Animation_4rola"),
+"Run": SubResource("Animation_f601f")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jpjsk"]
+animation = &"Drift"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4bq38"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xypoi"]
+animation = &"Run"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cykj4"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u8aib"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_t8bvo"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_atwf1"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_j27ct"]
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_m0ebo"]
+states/Drift/node = SubResource("AnimationNodeAnimation_jpjsk")
+states/Drift/position = Vector2(390, 184)
+states/Idle/node = SubResource("AnimationNodeAnimation_4bq38")
+states/Idle/position = Vector2(340, 97)
+states/Run/node = SubResource("AnimationNodeAnimation_xypoi")
+states/Run/position = Vector2(446, 97)
+transitions = ["Idle", "Run", SubResource("AnimationNodeStateMachineTransition_cykj4"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_u8aib"), "Run", "Drift", SubResource("AnimationNodeStateMachineTransition_t8bvo"), "Drift", "Idle", SubResource("AnimationNodeStateMachineTransition_atwf1"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_j27ct")]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_b7p2d"]
+
+[node name="Player" type="CharacterBody2D"]
+scale = Vector2(2, 2)
+script = ExtResource("1_bayly")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_nht2m")
+hframes = 10
+vframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_hluul")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_m0ebo")
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/playback = SubResource("AnimationNodeStateMachinePlayback_b7p2d")

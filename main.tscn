@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3baav1aqy23x"]
+
+[ext_resource type="PackedScene" uid="uid://k5hm25gnsg4n" path="res://player.tscn" id="1_ock75"]
+[ext_resource type="Script" path="res://debug_console.gd" id="2_lmx0q"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_ock75")]
+position = Vector2(35, 213)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="DebugConsole" type="PanelContainer" parent="CanvasLayer"]
+offset_top = 1.0
+offset_right = 250.0
+offset_bottom = 101.0
+script = ExtResource("2_lmx0q")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DebugConsole"]
+layout_mode = 2
+
+[node name="Labels" type="VBoxContainer" parent="CanvasLayer/DebugConsole/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StateLabel" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Labels"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+text = "state: "
+fit_content = true
+
+[node name="InputVectorLabel" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Labels"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+text = "input_vector: "
+fit_content = true
+
+[node name="DriftLabel" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Labels"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+text = "should_drift: "
+fit_content = true
+
+[node name="Values" type="VBoxContainer" parent="CanvasLayer/DebugConsole/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StateValue" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Values"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+text = "ceva"
+fit_content = true
+
+[node name="InputVectorValue" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Values"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+text = "altceva"
+fit_content = true
+
+[node name="DriftValue" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Values"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+text = "altceva"
+fit_content = true
