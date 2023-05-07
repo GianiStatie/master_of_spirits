@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://k5hm25gnsg4n"]
+[gd_scene load_steps=37 format=3 uid="uid://k5hm25gnsg4n"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_bayly"]
 [ext_resource type="Texture2D" uid="uid://djyjpab3jbo4i" path="res://assets/player/Yoh-Sheet.png" id="2_nht2m"]
@@ -178,6 +178,37 @@ tracks/0/keys = {
 "values": [Vector2i(4, 1), Vector2i(5, 1), Vector2i(6, 1), Vector2i(7, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_r8i0k"]
+resource_name = "Land"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [Vector2i(3, 2), Vector2i(5, 2), Vector2i(9, 1)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.3),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_fully_landed"
+}]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_hluul"]
 _data = {
 "Attack": SubResource("Animation_kgfjy"),
@@ -185,6 +216,7 @@ _data = {
 "Fall": SubResource("Animation_demoe"),
 "Idle": SubResource("Animation_4x480"),
 "Jump": SubResource("Animation_btxg2"),
+"Land": SubResource("Animation_r8i0k"),
 "RESET": SubResource("Animation_4rola"),
 "Raise": SubResource("Animation_s1opt"),
 "Run": SubResource("Animation_f601f"),
@@ -202,6 +234,9 @@ animation = &"Idle"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ejj8j"]
 animation = &"Jump"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_amrwe"]
+animation = &"Land"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fuehy"]
 animation = &"Raise"
@@ -224,8 +259,6 @@ animation = &"Sit"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_bvqm4"]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_aawt6"]
-
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_vqg2s"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5ik3e"]
@@ -233,6 +266,10 @@ animation = &"Sit"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qpuv5"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_urdo6"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_80xrd"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hfcne"]
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_m0ebo"]
 states/Drift/node = SubResource("AnimationNodeAnimation_jpjsk")
@@ -243,6 +280,8 @@ states/Idle/node = SubResource("AnimationNodeAnimation_4bq38")
 states/Idle/position = Vector2(366, 129)
 states/Jump/node = SubResource("AnimationNodeAnimation_ejj8j")
 states/Jump/position = Vector2(248, 40)
+states/Land/node = SubResource("AnimationNodeAnimation_amrwe")
+states/Land/position = Vector2(366, -35)
 states/Raise/node = SubResource("AnimationNodeAnimation_fuehy")
 states/Raise/position = Vector2(248, 241)
 states/Run/node = SubResource("AnimationNodeAnimation_xypoi")
@@ -250,10 +289,13 @@ states/Run/position = Vector2(501, 129)
 states/Sit/node = SubResource("AnimationNodeAnimation_6mw6b")
 states/Sit/position = Vector2(248, 158)
 states/Start/position = Vector2(74, 69)
-transitions = ["Idle", "Run", SubResource("AnimationNodeStateMachineTransition_cykj4"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_u8aib"), "Run", "Drift", SubResource("AnimationNodeStateMachineTransition_t8bvo"), "Drift", "Idle", SubResource("AnimationNodeStateMachineTransition_atwf1"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_j27ct"), "Idle", "Jump", SubResource("AnimationNodeStateMachineTransition_bvqm4"), "Fall", "Idle", SubResource("AnimationNodeStateMachineTransition_aawt6"), "Jump", "Fall", SubResource("AnimationNodeStateMachineTransition_vqg2s"), "Sit", "Raise", SubResource("AnimationNodeStateMachineTransition_5ik3e"), "Raise", "Idle", SubResource("AnimationNodeStateMachineTransition_qpuv5"), "Idle", "Sit", SubResource("AnimationNodeStateMachineTransition_urdo6")]
-graph_offset = Vector2(-230, -54)
+transitions = ["Idle", "Run", SubResource("AnimationNodeStateMachineTransition_cykj4"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_u8aib"), "Run", "Drift", SubResource("AnimationNodeStateMachineTransition_t8bvo"), "Drift", "Idle", SubResource("AnimationNodeStateMachineTransition_atwf1"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_j27ct"), "Idle", "Jump", SubResource("AnimationNodeStateMachineTransition_bvqm4"), "Jump", "Fall", SubResource("AnimationNodeStateMachineTransition_vqg2s"), "Sit", "Raise", SubResource("AnimationNodeStateMachineTransition_5ik3e"), "Raise", "Idle", SubResource("AnimationNodeStateMachineTransition_qpuv5"), "Idle", "Sit", SubResource("AnimationNodeStateMachineTransition_urdo6"), "Fall", "Land", SubResource("AnimationNodeStateMachineTransition_80xrd"), "Land", "Idle", SubResource("AnimationNodeStateMachineTransition_hfcne")]
+graph_offset = Vector2(-226, -74)
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_b7p2d"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n4vx6"]
+size = Vector2(15, 40)
 
 [node name="Player" type="CharacterBody2D"]
 scale = Vector2(2, 2)
@@ -275,3 +317,7 @@ tree_root = SubResource("AnimationNodeStateMachine_m0ebo")
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/playback = SubResource("AnimationNodeStateMachinePlayback_b7p2d")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_n4vx6")

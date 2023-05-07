@@ -1,12 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://c3baav1aqy23x"]
+[gd_scene load_steps=5 format=3 uid="uid://c3baav1aqy23x"]
 
 [ext_resource type="PackedScene" uid="uid://k5hm25gnsg4n" path="res://player.tscn" id="1_ock75"]
 [ext_resource type="Script" path="res://debug_console.gd" id="2_lmx0q"]
+[ext_resource type="Texture2D" uid="uid://badtog2mwosyh" path="res://icon.svg" id="3_onlav"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wbego"]
+size = Vector2(128, 128)
 
 [node name="Main" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_ock75")]
-position = Vector2(35, 213)
+position = Vector2(37, 213)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -35,10 +39,22 @@ theme_override_font_sizes/normal_font_size = 10
 text = "input_vector: "
 fit_content = true
 
+[node name="VelocityLabel" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Labels"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+text = "velocity: "
+fit_content = true
+
 [node name="DriftLabel" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Labels"]
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 10
 text = "should_drift: "
+fit_content = true
+
+[node name="OnFloorLabel" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Labels"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+text = "is_on_floor: "
 fit_content = true
 
 [node name="Values" type="VBoxContainer" parent="CanvasLayer/DebugConsole/HBoxContainer"]
@@ -57,8 +73,31 @@ theme_override_font_sizes/normal_font_size = 10
 text = "altceva"
 fit_content = true
 
+[node name="VelocityValue" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Values"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+text = "altceva"
+fit_content = true
+
 [node name="DriftValue" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Values"]
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 10
 text = "altceva"
 fit_content = true
+
+[node name="OnFloorValue" type="RichTextLabel" parent="CanvasLayer/DebugConsole/HBoxContainer/Values"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 10
+text = "altceva"
+fit_content = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(128, 274)
+scale = Vector2(6, 0.25)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+texture = ExtResource("3_onlav")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_wbego")
