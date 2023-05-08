@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 const MAX_SPEED = 2.3e2
-const FRICTION = 5.2e2
+const FRICTION = 6.2e2
 const JUMP_ACCELERATION = 55
 const MAX_JUMP_SPEED = 700
 const MAX_FALL_SPEED = 650
@@ -41,6 +41,7 @@ var state_values = {
 
 func _physics_process(delta):
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
+	input_vector = input_vector.normalized()
 	
 	match state:
 		IDLE:
@@ -84,23 +85,24 @@ func idle_state(_delta):
 		state = JUMP
 
 func move_state(delta):
-	input_vector = input_vector.normalized()
-	
-	if Input.is_action_pressed("ui_down"):
-		state = SIT
-	
-	if Input.is_action_just_pressed("player_jump"):
-		state = JUMP
+	var is_move_key_pressed = Input.is_action_pressed("ui_left") or Input.is_action_pressed("ui_right")
 	
 	if input_vector != Vector2.ZERO:
 		velocity = input_vector * MAX_SPEED
 		animationState.travel("Run")
 		should_drift = Time.get_ticks_msec() - run_start > drift_debounce_msec
-	elif should_drift:
+	elif should_drift and not is_move_key_pressed:
 		should_drift = false
 		state = DRIFT
 	else:
 		state = IDLE
+	
+	if Input.is_action_pressed("ui_down"):
+		state = SIT
+	if Input.is_action_just_pressed("player_jump"):
+		state = JUMP
+	if not is_on_floor():
+		state = FALL
 
 func drift_state(delta):
 	velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
@@ -115,6 +117,8 @@ func drift_state(delta):
 		state = SIT
 	elif velocity == Vector2.ZERO:
 		state = IDLE
+	if not is_on_floor():
+		state = FALL
 
 func sit_state(delta):
 	should_drift = false
@@ -123,7 +127,6 @@ func sit_state(delta):
 	
 	if Input.is_action_just_released("ui_down"):
 		state = RAISE
-	
 	if Input.is_action_just_pressed("player_jump"):
 		state = JUMP
 
@@ -137,13 +140,18 @@ func jump_state(delta):
 	should_drift = false
 	input_vector.y = -1
 	velocity.y = move_toward(velocity.y, -MAX_JUMP_SPEED, JUMP_ACCELERATION)
+	velocity.x = input_vector.x * MAX_SPEED * 0.85
 	animationState.travel("Jump")
+	
 	if Input.is_action_just_released("player_jump") or velocity.y == -MAX_JUMP_SPEED:
 		state = FALL
 
 func fall_state(delta):
 	input_vector.y = 1
 	velocity.y = move_toward(velocity.y, MAX_FALL_SPEED, JUMP_ACCELERATION)
+	velocity.x = input_vector.x * MAX_SPEED * 0.85
+	animationState.travel("Fall")
+	
 	if is_on_floor():
 		state = LAND
 
@@ -151,12 +159,16 @@ func land_state(delta):
 	input_vector.y = 0
 	velocity = Vector2.ZERO
 	animationState.travel("Land")
+	
 	if input_vector.x != 0:
 		state = MOVE
 	if Input.is_action_just_pressed("player_jump"):
 		state = JUMP
+	if Input.is_action_pressed("ui_down"):
+		state = SIT
 
 func _fully_landed():
 	state = IDLE
+	
 	if Input.is_action_just_pressed("player_jump"):
 		state = JUMP
