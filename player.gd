@@ -17,6 +17,8 @@ var input_vector = Vector2.ZERO
 var run_start = 0
 var should_drift = false
 var drift_debounce_msec = 200
+var should_attack = false
+var attack_index = 0
 
 enum {
 	IDLE,
@@ -26,9 +28,12 @@ enum {
 	RAISE,
 	JUMP,
 	FALL,
-	LAND
+	LAND,
+	ATTACK,
+	ATTACK2,
+	ATTACK3
 }
-var state_names = ["idle", "move", "drift", "sit", "raise", "jump", "fall", "land"]
+var state_names = ["idle", "move", "drift", "sit", "raise", "jump", "fall", "land", "attack", "attack2", "attack3"]
 var state = IDLE
 
 var state_values = {
@@ -60,6 +65,10 @@ func _physics_process(delta):
 			fall_state(delta)
 		LAND:
 			land_state(delta)
+		ATTACK:
+			attack_state(delta)
+		ATTACK2:
+			attack_state2(delta)
 	
 	if input_vector.x != 0:
 		sprite.scale.x = sign(input_vector.x)
@@ -83,6 +92,8 @@ func idle_state(_delta):
 		state = SIT
 	if Input.is_action_just_pressed("player_jump"):
 		state = JUMP
+	if Input.is_action_just_released("player_attack"):
+		state = ATTACK
 
 func move_state(delta):
 	var is_move_key_pressed = Input.is_action_pressed("ui_left") or Input.is_action_pressed("ui_right")
@@ -100,6 +111,8 @@ func move_state(delta):
 		state = SIT
 	if Input.is_action_just_pressed("player_jump"):
 		state = JUMP
+	if Input.is_action_just_released("player_attack"):
+		state = ATTACK
 	if not is_on_floor():
 		state = FALL
 	
@@ -119,6 +132,8 @@ func drift_state(delta):
 		state = SIT
 	elif velocity == Vector2.ZERO:
 		state = IDLE
+	if Input.is_action_just_released("player_attack"):
+		state = ATTACK
 	if not is_on_floor():
 		state = FALL
 
@@ -174,3 +189,28 @@ func _fully_landed():
 	
 	if Input.is_action_just_pressed("player_jump"):
 		state = JUMP
+
+func attack_state(delta):
+	velocity = Vector2.ZERO
+	animationState.travel("Attack")
+	
+	if Input.is_action_just_pressed("player_attack"):
+		should_attack = true
+
+func _finished_attacking():
+	if should_attack:
+		state = ATTACK2
+	else:
+		state = IDLE
+	should_attack = false
+
+func attack_state2(delta):
+	velocity = Vector2.ZERO
+	animationState.travel("Attack2")
+	
+	if Input.is_action_just_pressed("player_attack"):
+		should_attack = true
+
+func _finished_attacking2():
+	state = IDLE
+	should_attack = false
