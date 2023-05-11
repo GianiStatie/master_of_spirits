@@ -2,9 +2,9 @@ extends CharacterBody2D
 
 const MAX_SPEED = 2.3e2
 const FRICTION = 6.2e2
-const JUMP_ACCELERATION = 55
-const MAX_JUMP_SPEED = 700
-const MAX_FALL_SPEED = 650
+const JUMP_ACCELERATION = 42
+const MAX_JUMP_SPEED = 550
+const MAX_FALL_SPEED = 550
 
 var input_vector = Vector2.ZERO
 
@@ -92,7 +92,6 @@ func move_state(delta):
 		animationState.travel("Run")
 		should_drift = Time.get_ticks_msec() - run_start > drift_debounce_msec
 	elif should_drift and not is_move_key_pressed:
-		should_drift = false
 		state = DRIFT
 	else:
 		state = IDLE
@@ -103,6 +102,9 @@ func move_state(delta):
 		state = JUMP
 	if not is_on_floor():
 		state = FALL
+	
+	if state != MOVE:
+		should_drift = false
 
 func drift_state(delta):
 	velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
