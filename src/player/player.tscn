@@ -1,11 +1,22 @@
-[gd_scene load_steps=50 format=3 uid="uid://k5hm25gnsg4n"]
+[gd_scene load_steps=62 format=3 uid="uid://m4shxtlq5kes"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_bayly"]
-[ext_resource type="Texture2D" uid="uid://dt6d4r0346suj" path="res://assets/player/Yoh.png" id="2_1t5r1"]
+[ext_resource type="Script" path="res://src/player/player.gd" id="1_rtbyy"]
+[ext_resource type="Texture2D" uid="uid://dt6d4r0346suj" path="res://src/player/assets/Yoh.png" id="2_ek52t"]
+[ext_resource type="Script" path="res://src/utils/state_machine.gd" id="3_vwji7"]
+[ext_resource type="Script" path="res://src/player/states/Idle.gd" id="4_rsswh"]
+[ext_resource type="Script" path="res://src/player/states/Run.gd" id="5_caqt1"]
+[ext_resource type="Script" path="res://src/player/states/Drift.gd" id="6_4yc7k"]
+[ext_resource type="Script" path="res://src/player/states/Rise.gd" id="8_ixukc"]
+[ext_resource type="Script" path="res://src/player/states/Jump.gd" id="9_7ik2k"]
+[ext_resource type="Script" path="res://src/player/states/Fall.gd" id="9_iknwe"]
+[ext_resource type="Script" path="res://src/player/states/Land.gd" id="10_k2cgt"]
+[ext_resource type="Script" path="res://src/player/states/Attack1.gd" id="11_xkf3w"]
+[ext_resource type="Script" path="res://src/player/states/Attack2.gd" id="12_sceus"]
+[ext_resource type="Script" path="res://src/player/Attack3.gd" id="13_xyy0k"]
 
 [sub_resource type="Animation" id="Animation_kgfjy"]
 resource_name = "Attack"
-length = 0.3
+length = 0.24
 step = 0.03
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -22,7 +33,7 @@ tracks/0/keys = {
 tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath(".")
+tracks/1/path = NodePath("StateMachine/Attack1")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -30,7 +41,7 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_finished_attacking"
+"method": &"_finished_attack1"
 }]
 }
 
@@ -53,7 +64,7 @@ tracks/0/keys = {
 tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath(".")
+tracks/1/path = NodePath("StateMachine/Attack2")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -61,13 +72,13 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_finished_attacking"
+"method": &"_finished_attack2"
 }]
 }
 
 [sub_resource type="Animation" id="Animation_4oann"]
 resource_name = "Attack3"
-length = 0.35
+length = 0.3
 step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -84,15 +95,15 @@ tracks/0/keys = {
 tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath(".")
+tracks/1/path = NodePath("StateMachine/Attack3")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.35),
+"times": PackedFloat32Array(0.3),
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_finished_attacking"
+"method": &"_finished_attack3"
 }]
 }
 
@@ -183,7 +194,7 @@ tracks/0/keys = {
 tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath(".")
+tracks/1/path = NodePath("StateMachine/Land")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -191,7 +202,7 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_fully_landed"
+"method": &"_finished_landing"
 }]
 }
 
@@ -223,7 +234,7 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_s1opt"]
-resource_name = "Raise"
+resource_name = "Rise"
 length = 0.06
 step = 0.03
 tracks/0/type = "value"
@@ -241,7 +252,7 @@ tracks/0/keys = {
 tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath(".")
+tracks/1/path = NodePath("StateMachine/Rise")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -249,7 +260,7 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_fully_raised"
+"method": &"_finished_rising"
 }]
 }
 
@@ -297,7 +308,7 @@ _data = {
 "Jump": SubResource("Animation_btxg2"),
 "Land": SubResource("Animation_r8i0k"),
 "RESET": SubResource("Animation_4rola"),
-"Raise": SubResource("Animation_s1opt"),
+"Rise": SubResource("Animation_s1opt"),
 "Run": SubResource("Animation_f601f"),
 "Sit": SubResource("Animation_umqts")
 }
@@ -326,8 +337,8 @@ animation = &"Jump"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_amrwe"]
 animation = &"Land"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fuehy"]
-animation = &"Raise"
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_bs3j8"]
+animation = &"Rise"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xypoi"]
 animation = &"Run"
@@ -348,10 +359,6 @@ animation = &"Sit"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_bvqm4"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_vqg2s"]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5ik3e"]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qpuv5"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_urdo6"]
 
@@ -375,6 +382,10 @@ animation = &"Sit"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_vu0i4"]
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_fsuss"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8tp3d"]
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_m0ebo"]
 states/Attack/node = SubResource("AnimationNodeAnimation_psd26")
 states/Attack/position = Vector2(468, 241)
@@ -392,27 +403,45 @@ states/Jump/node = SubResource("AnimationNodeAnimation_ejj8j")
 states/Jump/position = Vector2(248, 40)
 states/Land/node = SubResource("AnimationNodeAnimation_amrwe")
 states/Land/position = Vector2(366, -35)
-states/Raise/node = SubResource("AnimationNodeAnimation_fuehy")
-states/Raise/position = Vector2(248, 241)
+states/Rise/node = SubResource("AnimationNodeAnimation_bs3j8")
+states/Rise/position = Vector2(248, 241)
 states/Run/node = SubResource("AnimationNodeAnimation_xypoi")
 states/Run/position = Vector2(624, 129)
 states/Sit/node = SubResource("AnimationNodeAnimation_6mw6b")
 states/Sit/position = Vector2(248, 158)
 states/Start/position = Vector2(74, 69)
-transitions = ["Idle", "Run", SubResource("AnimationNodeStateMachineTransition_cykj4"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_u8aib"), "Run", "Drift", SubResource("AnimationNodeStateMachineTransition_t8bvo"), "Drift", "Idle", SubResource("AnimationNodeStateMachineTransition_atwf1"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_j27ct"), "Idle", "Jump", SubResource("AnimationNodeStateMachineTransition_bvqm4"), "Jump", "Fall", SubResource("AnimationNodeStateMachineTransition_vqg2s"), "Sit", "Raise", SubResource("AnimationNodeStateMachineTransition_5ik3e"), "Raise", "Idle", SubResource("AnimationNodeStateMachineTransition_qpuv5"), "Idle", "Sit", SubResource("AnimationNodeStateMachineTransition_urdo6"), "Fall", "Land", SubResource("AnimationNodeStateMachineTransition_80xrd"), "Land", "Idle", SubResource("AnimationNodeStateMachineTransition_hfcne"), "Idle", "Attack", SubResource("AnimationNodeStateMachineTransition_hngjr"), "Run", "Attack", SubResource("AnimationNodeStateMachineTransition_3o6dh"), "Attack", "Idle", SubResource("AnimationNodeStateMachineTransition_mwlgo"), "Drift", "Attack", SubResource("AnimationNodeStateMachineTransition_74ftq"), "Attack", "Attack2", SubResource("AnimationNodeStateMachineTransition_0egup"), "Attack2", "Idle", SubResource("AnimationNodeStateMachineTransition_38hdb"), "Attack2", "Attack3", SubResource("AnimationNodeStateMachineTransition_grmfm"), "Attack3", "Idle", SubResource("AnimationNodeStateMachineTransition_vu0i4")]
-graph_offset = Vector2(-89, 48)
+transitions = ["Idle", "Run", SubResource("AnimationNodeStateMachineTransition_cykj4"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_u8aib"), "Run", "Drift", SubResource("AnimationNodeStateMachineTransition_t8bvo"), "Drift", "Idle", SubResource("AnimationNodeStateMachineTransition_atwf1"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_j27ct"), "Idle", "Jump", SubResource("AnimationNodeStateMachineTransition_bvqm4"), "Jump", "Fall", SubResource("AnimationNodeStateMachineTransition_vqg2s"), "Idle", "Sit", SubResource("AnimationNodeStateMachineTransition_urdo6"), "Fall", "Land", SubResource("AnimationNodeStateMachineTransition_80xrd"), "Land", "Idle", SubResource("AnimationNodeStateMachineTransition_hfcne"), "Idle", "Attack", SubResource("AnimationNodeStateMachineTransition_hngjr"), "Run", "Attack", SubResource("AnimationNodeStateMachineTransition_3o6dh"), "Attack", "Idle", SubResource("AnimationNodeStateMachineTransition_mwlgo"), "Drift", "Attack", SubResource("AnimationNodeStateMachineTransition_74ftq"), "Attack", "Attack2", SubResource("AnimationNodeStateMachineTransition_0egup"), "Attack2", "Idle", SubResource("AnimationNodeStateMachineTransition_38hdb"), "Attack2", "Attack3", SubResource("AnimationNodeStateMachineTransition_grmfm"), "Attack3", "Idle", SubResource("AnimationNodeStateMachineTransition_vu0i4"), "Sit", "Rise", SubResource("AnimationNodeStateMachineTransition_fsuss"), "Rise", "Idle", SubResource("AnimationNodeStateMachineTransition_8tp3d")]
+graph_offset = Vector2(-157, 19)
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_b7p2d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n4vx6"]
 size = Vector2(15, 40)
 
+[sub_resource type="GDScript" id="GDScript_0dxf8"]
+script/source = "# Sit.gd
+extends State
+
+# Upon entering the state, we set the Player node's velocity to zero.
+func enter(_msg := {}) -> void:
+	owner.velocity = Vector2.ZERO
+
+func handle_input(_event: InputEvent) -> void:
+	if Input.is_action_just_released(\"ui_down\"):
+		state_machine.transition_to(\"Rise\")
+	if Input.is_action_just_pressed(\"player_jump\"):
+		state_machine.transition_to(\"Jump\")
+
+func update(_delta: float) -> void:
+	owner.animationState.travel(\"Sit\")
+"
+
 [node name="Player" type="CharacterBody2D"]
 scale = Vector2(2, 2)
-script = ExtResource("1_bayly")
+script = ExtResource("1_rtbyy")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_1t5r1")
+texture = ExtResource("2_ek52t")
 hframes = 10
 vframes = 6
 frame = 26
@@ -438,6 +467,51 @@ drag_vertical_enabled = true
 drag_right_margin = 0.1
 drag_bottom_margin = 0.1
 
-[node name="AttackComboTimer" type="Timer" parent="."]
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("3_vwji7")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("4_rsswh")
+
+[node name="Run" type="Node" parent="StateMachine"]
+script = ExtResource("5_caqt1")
+
+[node name="Drift" type="Node" parent="StateMachine"]
+script = ExtResource("6_4yc7k")
+
+[node name="Sit" type="Node" parent="StateMachine"]
+script = SubResource("GDScript_0dxf8")
+
+[node name="Rise" type="Node" parent="StateMachine"]
+script = ExtResource("8_ixukc")
+
+[node name="Jump" type="Node" parent="StateMachine"]
+script = ExtResource("9_7ik2k")
+
+[node name="Fall" type="Node" parent="StateMachine"]
+script = ExtResource("9_iknwe")
+
+[node name="Land" type="Node" parent="StateMachine"]
+script = ExtResource("10_k2cgt")
+
+[node name="Attack1" type="Node" parent="StateMachine"]
+script = ExtResource("11_xkf3w")
+
+[node name="ComboTimer" type="Timer" parent="StateMachine/Attack1"]
+wait_time = 0.1
+one_shot = true
+
+[node name="Attack2" type="Node" parent="StateMachine"]
+script = ExtResource("12_sceus")
+
+[node name="ComboTimer" type="Timer" parent="StateMachine/Attack2"]
+wait_time = 0.1
+one_shot = true
+
+[node name="Attack3" type="Node" parent="StateMachine"]
+script = ExtResource("13_xyy0k")
+
+[node name="ComboTimer" type="Timer" parent="StateMachine/Attack3"]
 wait_time = 0.1
 one_shot = true
