@@ -69,6 +69,8 @@ func _physics_process(delta):
 			attack_state(delta)
 		ATTACK2:
 			attack_state2(delta)
+		ATTACK3:
+			attack_state3(delta)
 	
 	if input_vector.x != 0:
 		sprite.scale.x = sign(input_vector.x)
@@ -212,5 +214,16 @@ func attack_state2(delta):
 		should_attack = true
 
 func _finished_attacking2():
+	if should_attack:
+		state = ATTACK3
+	else:
+		state = IDLE
+	should_attack = false
+
+func attack_state3(delta):
+	velocity = Vector2.ZERO
+	animationState.travel("Attack3")
+
+func _finished_attacking3():
 	state = IDLE
 	should_attack = false

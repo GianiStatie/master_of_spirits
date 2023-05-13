@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://k5hm25gnsg4n"]
+[gd_scene load_steps=50 format=3 uid="uid://k5hm25gnsg4n"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_bayly"]
 [ext_resource type="Texture2D" uid="uid://djyjpab3jbo4i" path="res://assets/player/Yoh-Sheet.png" id="2_nht2m"]
@@ -31,6 +31,37 @@ tracks/1/keys = {
 "values": [{
 "args": [],
 "method": &"_finished_attacking"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_n7e07"]
+resource_name = "Attack2"
+length = 0.33
+step = 0.02
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.04, 0.08, 0.12, 0.16, 0.22),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [32, 33, 34, 35, 36, 37]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.32),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_finished_attacking2"
 }]
 }
 
@@ -224,10 +255,10 @@ tracks/0/keys = {
 "values": [Vector2i(4, 1), Vector2i(5, 1), Vector2i(6, 1), Vector2i(7, 1)]
 }
 
-[sub_resource type="Animation" id="Animation_n7e07"]
-resource_name = "Attack2"
-length = 0.33
-step = 0.02
+[sub_resource type="Animation" id="Animation_4oann"]
+resource_name = "Attack3"
+length = 0.35
+step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -235,10 +266,10 @@ tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.04, 0.08, 0.12, 0.16, 0.22),
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [32, 33, 34, 35, 36, 37]
+"values": [37, 38, 39, 40, 41, 42]
 }
 tracks/1/type = "method"
 tracks/1/imported = false
@@ -247,11 +278,11 @@ tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.32),
+"times": PackedFloat32Array(0.35),
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_finished_attacking2"
+"method": &"_finished_attacking3"
 }]
 }
 
@@ -259,6 +290,7 @@ tracks/1/keys = {
 _data = {
 "Attack": SubResource("Animation_kgfjy"),
 "Attack2": SubResource("Animation_n7e07"),
+"Attack3": SubResource("Animation_4oann"),
 "Drift": SubResource("Animation_sc8n3"),
 "Fall": SubResource("Animation_demoe"),
 "Idle": SubResource("Animation_4x480"),
@@ -275,6 +307,9 @@ animation = &"Attack"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fxdgs"]
 animation = &"Attack2"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_i15ru"]
+animation = &"Attack3"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jpjsk"]
 animation = &"Drift"
@@ -336,11 +371,17 @@ animation = &"Sit"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_38hdb"]
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_grmfm"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_vu0i4"]
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_m0ebo"]
 states/Attack/node = SubResource("AnimationNodeAnimation_psd26")
 states/Attack/position = Vector2(468, 241)
 states/Attack2/node = SubResource("AnimationNodeAnimation_fxdgs")
 states/Attack2/position = Vector2(610, 241)
+states/Attack3/node = SubResource("AnimationNodeAnimation_i15ru")
+states/Attack3/position = Vector2(737, 241)
 states/Drift/node = SubResource("AnimationNodeAnimation_jpjsk")
 states/Drift/position = Vector2(468, 40)
 states/Fall/node = SubResource("AnimationNodeAnimation_ucbm6")
@@ -358,8 +399,8 @@ states/Run/position = Vector2(624, 129)
 states/Sit/node = SubResource("AnimationNodeAnimation_6mw6b")
 states/Sit/position = Vector2(248, 158)
 states/Start/position = Vector2(74, 69)
-transitions = ["Idle", "Run", SubResource("AnimationNodeStateMachineTransition_cykj4"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_u8aib"), "Run", "Drift", SubResource("AnimationNodeStateMachineTransition_t8bvo"), "Drift", "Idle", SubResource("AnimationNodeStateMachineTransition_atwf1"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_j27ct"), "Idle", "Jump", SubResource("AnimationNodeStateMachineTransition_bvqm4"), "Jump", "Fall", SubResource("AnimationNodeStateMachineTransition_vqg2s"), "Sit", "Raise", SubResource("AnimationNodeStateMachineTransition_5ik3e"), "Raise", "Idle", SubResource("AnimationNodeStateMachineTransition_qpuv5"), "Idle", "Sit", SubResource("AnimationNodeStateMachineTransition_urdo6"), "Fall", "Land", SubResource("AnimationNodeStateMachineTransition_80xrd"), "Land", "Idle", SubResource("AnimationNodeStateMachineTransition_hfcne"), "Idle", "Attack", SubResource("AnimationNodeStateMachineTransition_hngjr"), "Run", "Attack", SubResource("AnimationNodeStateMachineTransition_3o6dh"), "Attack", "Idle", SubResource("AnimationNodeStateMachineTransition_mwlgo"), "Drift", "Attack", SubResource("AnimationNodeStateMachineTransition_74ftq"), "Attack", "Attack2", SubResource("AnimationNodeStateMachineTransition_0egup"), "Attack2", "Idle", SubResource("AnimationNodeStateMachineTransition_38hdb")]
-graph_offset = Vector2(-226, -74)
+transitions = ["Idle", "Run", SubResource("AnimationNodeStateMachineTransition_cykj4"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_u8aib"), "Run", "Drift", SubResource("AnimationNodeStateMachineTransition_t8bvo"), "Drift", "Idle", SubResource("AnimationNodeStateMachineTransition_atwf1"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_j27ct"), "Idle", "Jump", SubResource("AnimationNodeStateMachineTransition_bvqm4"), "Jump", "Fall", SubResource("AnimationNodeStateMachineTransition_vqg2s"), "Sit", "Raise", SubResource("AnimationNodeStateMachineTransition_5ik3e"), "Raise", "Idle", SubResource("AnimationNodeStateMachineTransition_qpuv5"), "Idle", "Sit", SubResource("AnimationNodeStateMachineTransition_urdo6"), "Fall", "Land", SubResource("AnimationNodeStateMachineTransition_80xrd"), "Land", "Idle", SubResource("AnimationNodeStateMachineTransition_hfcne"), "Idle", "Attack", SubResource("AnimationNodeStateMachineTransition_hngjr"), "Run", "Attack", SubResource("AnimationNodeStateMachineTransition_3o6dh"), "Attack", "Idle", SubResource("AnimationNodeStateMachineTransition_mwlgo"), "Drift", "Attack", SubResource("AnimationNodeStateMachineTransition_74ftq"), "Attack", "Attack2", SubResource("AnimationNodeStateMachineTransition_0egup"), "Attack2", "Idle", SubResource("AnimationNodeStateMachineTransition_38hdb"), "Attack2", "Attack3", SubResource("AnimationNodeStateMachineTransition_grmfm"), "Attack3", "Idle", SubResource("AnimationNodeStateMachineTransition_vu0i4")]
+graph_offset = Vector2(-89, 48)
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_b7p2d"]
 
