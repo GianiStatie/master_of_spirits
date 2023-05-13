@@ -97,7 +97,7 @@ func idle_state(_delta):
 		state = SIT
 	if Input.is_action_just_pressed("player_jump"):
 		state = JUMP
-	if Input.is_action_just_released("player_attack"):
+	if Input.is_action_just_pressed("player_attack"):
 		finished_attacking = false
 		state = ATTACK
 
@@ -117,7 +117,7 @@ func move_state(delta):
 		state = SIT
 	if Input.is_action_just_pressed("player_jump"):
 		state = JUMP
-	if Input.is_action_just_released("player_attack"):
+	if Input.is_action_just_pressed("player_attack"):
 		finished_attacking = false
 		state = ATTACK
 	if not is_on_floor():
@@ -139,7 +139,7 @@ func drift_state(delta):
 		state = SIT
 	elif velocity == Vector2.ZERO:
 		state = IDLE
-	if Input.is_action_just_released("player_attack"):
+	if Input.is_action_just_pressed("player_attack"):
 		finished_attacking = false
 		state = ATTACK
 	if not is_on_floor():
@@ -191,7 +191,7 @@ func land_state(delta):
 		state = JUMP
 	if Input.is_action_pressed("ui_down"):
 		state = SIT
-	if Input.is_action_just_released("player_attack"):
+	if Input.is_action_just_pressed("player_attack"):
 		finished_attacking = false
 		state = ATTACK
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djyjpab3jbo4i"
-path="res://.godot/imported/Yoh-Sheet.png-25e789dfabe5be8802cf15a7b5809d55.ctex"
+uid="uid://dt6d4r0346suj"
+path="res://.godot/imported/Yoh.png-e3d7bdea3972ceb0906515e3c680fa28.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/player/Yoh-Sheet.png"
-dest_files=["res://.godot/imported/Yoh-Sheet.png-25e789dfabe5be8802cf15a7b5809d55.ctex"]
+source_file="res://assets/player/Yoh.png"
+dest_files=["res://.godot/imported/Yoh.png-e3d7bdea3972ceb0906515e3c680fa28.ctex"]
 
 [params]
 
