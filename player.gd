@@ -13,11 +13,14 @@ var input_vector = Vector2.ZERO
 @onready var animationTree = $AnimationTree
 @onready var animationState = animationTree.get("parameters/playback")
 @onready var debugConsole = $"../CanvasLayer/DebugConsole"
+@onready var attackComboTimer = $AttackComboTimer
 
 var run_start = 0
 var should_drift = false
+var should_jump = false
 var drift_debounce_msec = 200
-var should_attack = false
+var finished_attacking = false
+var attack_combo = false
 var attack_index = 0
 
 enum {
@@ -68,9 +71,9 @@ func _physics_process(delta):
 		ATTACK:
 			attack_state(delta)
 		ATTACK2:
-			attack_state2(delta)
+			attack_state(delta)
 		ATTACK3:
-			attack_state3(delta)
+			attack_state(delta)
 	
 	if input_vector.x != 0:
 		sprite.scale.x = sign(input_vector.x)
@@ -95,6 +98,7 @@ func idle_state(_delta):
 	if Input.is_action_just_pressed("player_jump"):
 		state = JUMP
 	if Input.is_action_just_released("player_attack"):
+		finished_attacking = false
 		state = ATTACK
 
 func move_state(delta):
@@ -114,6 +118,7 @@ func move_state(delta):
 	if Input.is_action_just_pressed("player_jump"):
 		state = JUMP
 	if Input.is_action_just_released("player_attack"):
+		finished_attacking = false
 		state = ATTACK
 	if not is_on_floor():
 		state = FALL
@@ -135,6 +140,7 @@ func drift_state(delta):
 	elif velocity == Vector2.ZERO:
 		state = IDLE
 	if Input.is_action_just_released("player_attack"):
+		finished_attacking = false
 		state = ATTACK
 	if not is_on_floor():
 		state = FALL
@@ -185,6 +191,9 @@ func land_state(delta):
 		state = JUMP
 	if Input.is_action_pressed("ui_down"):
 		state = SIT
+	if Input.is_action_just_released("player_attack"):
+		finished_attacking = false
+		state = ATTACK
 
 func _fully_landed():
 	state = IDLE
@@ -194,36 +203,33 @@ func _fully_landed():
 
 func attack_state(delta):
 	velocity = Vector2.ZERO
-	animationState.travel("Attack")
+	
+	match attack_index:
+		0:
+			animationState.travel("Attack")
+		1:
+			animationState.travel("Attack2")
+		2:
+			animationState.travel("Attack3")
 	
 	if Input.is_action_just_pressed("player_attack"):
-		should_attack = true
+		attack_combo = true
+	
+	if Input.is_action_just_pressed("player_jump"):
+		should_jump = true
+	
+	if finished_attacking:
+		if attack_combo and attack_index < 2:
+			attack_index += 1
+			finished_attacking = false
+		elif should_jump:
+			should_jump = false
+			state = JUMP
+		elif attackComboTimer.is_stopped() or input_vector.x != 0:
+			attack_index = 0
+			state = IDLE
+		attack_combo = false
 
 func _finished_attacking():
-	if should_attack:
-		state = ATTACK2
-	else:
-		state = IDLE
-	should_attack = false
-
-func attack_state2(delta):
-	velocity = Vector2.ZERO
-	animationState.travel("Attack2")
-	
-	if Input.is_action_just_pressed("player_attack"):
-		should_attack = true
-
-func _finished_attacking2():
-	if should_attack:
-		state = ATTACK3
-	else:
-		state = IDLE
-	should_attack = false
-
-func attack_state3(delta):
-	velocity = Vector2.ZERO
-	animationState.travel("Attack3")
-
-func _finished_attacking3():
-	state = IDLE
-	should_attack = false
+	finished_attacking = true
+	attackComboTimer.start()

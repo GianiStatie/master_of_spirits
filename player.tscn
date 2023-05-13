@@ -61,7 +61,7 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_finished_attacking2"
+"method": &"_finished_attacking"
 }]
 }
 
@@ -282,7 +282,7 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_finished_attacking3"
+"method": &"_finished_attacking"
 }]
 }
 
@@ -437,3 +437,7 @@ position_smoothing_enabled = true
 drag_vertical_enabled = true
 drag_right_margin = 0.1
 drag_bottom_margin = 0.1
+
+[node name="AttackComboTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
