@@ -8,6 +8,8 @@ func enter(_msg := {}) -> void:
 func handle_input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("player_jump"):
 		state_machine.transition_to("Jump")
+	if Input.is_action_just_pressed("player_attack"):
+		state_machine.transition_to("Attack1")
 
 func update(_delta: float) -> void:
 	owner.animationState.travel("Land")

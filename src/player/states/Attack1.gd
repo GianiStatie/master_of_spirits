@@ -4,23 +4,27 @@ extends State
 @onready var comboTimer = $ComboTimer
 
 var finished_attacking: bool
-var combo_attack: bool
+var rushed_state: String
 
 func enter(_msg := {}) -> void:
 	finished_attacking = false
-	combo_attack = false
+	rushed_state = ""
 	owner.velocity = Vector2.ZERO
 
 func handle_input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("player_attack"):
-		combo_attack = true
+		rushed_state = "Attack2"
+	if Input.is_action_just_pressed("player_jump"):
+		rushed_state = "Jump"
+	if Input.is_action_pressed("ui_down"):
+		rushed_state = "Sit"
 
 func update(_delta: float) -> void:
 	owner.animationState.travel("Attack")
 	
 	if finished_attacking:
-		if combo_attack:
-			state_machine.transition_to("Attack2")
+		if rushed_state != "":
+			state_machine.transition_to(rushed_state)
 		if comboTimer.is_stopped():
 			state_machine.transition_to("Idle")
 
