@@ -26,8 +26,7 @@ func _process(_delta):
 	
 	state_values["input_vector"] = str(input_vector)
 	state_values["velocity"] = str(velocity)
-#	state_values["should_drift"] = str(runState.should_drift)
-	state_values["should_drift"] = str(sitAttackState.finished_attacking)
+	state_values["should_drift"] = str(runState.should_drift)
 	state_values["state"] = stateMachine.state.name
 	state_values["is_on_floor"] = str(is_on_floor())
 	debugConsole.set_values(state_values)

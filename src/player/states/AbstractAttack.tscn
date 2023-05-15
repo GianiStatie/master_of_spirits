@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://col1veiclgbsm"]
+
+[ext_resource type="Script" path="res://src/player/states/AbstractAttack.gd" id="1_0n5f5"]
+
+[node name="AbstractAttack" type="Node"]
+script = ExtResource("1_0n5f5")
+
+[node name="ComboTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[node name="AttackDebounce" type="Timer" parent="."]
+wait_time = 0.35
+one_shot = true

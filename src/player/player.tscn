@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://w5k8dybp15gv"]
+[gd_scene load_steps=72 format=3 uid="uid://bop68g8y0y500"]
 
 [ext_resource type="Script" path="res://src/player/player.gd" id="1_rtbyy"]
 [ext_resource type="Texture2D" uid="uid://dt6d4r0346suj" path="res://src/player/assets/Yoh.png" id="2_ek52t"]
@@ -12,9 +12,10 @@
 [ext_resource type="Script" path="res://src/player/states/Fall.gd" id="9_iknwe"]
 [ext_resource type="Script" path="res://src/player/states/Land.gd" id="10_k2cgt"]
 [ext_resource type="Script" path="res://src/player/states/Attack1.gd" id="11_xkf3w"]
+[ext_resource type="PackedScene" uid="uid://col1veiclgbsm" path="res://src/player/states/AbstractAttack.tscn" id="12_l4s58"]
 [ext_resource type="Script" path="res://src/player/states/Attack2.gd" id="12_sceus"]
-[ext_resource type="Script" path="res://src/player/Attack3.gd" id="13_xyy0k"]
 [ext_resource type="Script" path="res://src/player/states/SitAttack.gd" id="14_gq3kd"]
+[ext_resource type="Script" path="res://src/player/states/Attack3.gd" id="15_gh41p"]
 
 [sub_resource type="Animation" id="Animation_kgfjy"]
 resource_name = "Attack"
@@ -43,7 +44,7 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_finished_attack1"
+"method": &"_on_finished_attack"
 }]
 }
 
@@ -74,7 +75,7 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_finished_attack2"
+"method": &"_on_finished_attack"
 }]
 }
 
@@ -105,7 +106,7 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_finished_attack3"
+"method": &"_on_finished_attack"
 }]
 }
 
@@ -341,7 +342,7 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
-"method": &"_finished_sit_attack"
+"method": &"_on_finished_attack"
 }]
 }
 
@@ -586,38 +587,19 @@ script = ExtResource("9_iknwe")
 [node name="Land" type="Node" parent="StateMachine"]
 script = ExtResource("10_k2cgt")
 
-[node name="Attack1" type="Node" parent="StateMachine"]
+[node name="Attack1" parent="StateMachine" instance=ExtResource("12_l4s58")]
 script = ExtResource("11_xkf3w")
 
-[node name="ComboTimer" type="Timer" parent="StateMachine/Attack1"]
-wait_time = 0.1
-one_shot = true
-
-[node name="AttackDebounce" type="Timer" parent="StateMachine/Attack1"]
-wait_time = 0.35
-one_shot = true
-
-[node name="Attack2" type="Node" parent="StateMachine"]
+[node name="Attack2" parent="StateMachine" instance=ExtResource("12_l4s58")]
 script = ExtResource("12_sceus")
 
-[node name="ComboTimer" type="Timer" parent="StateMachine/Attack2"]
-wait_time = 0.1
-one_shot = true
+[node name="Attack3" parent="StateMachine" instance=ExtResource("12_l4s58")]
+script = ExtResource("15_gh41p")
 
-[node name="Attack3" type="Node" parent="StateMachine"]
-script = ExtResource("13_xyy0k")
-
-[node name="ComboTimer" type="Timer" parent="StateMachine/Attack3"]
-wait_time = 0.1
-one_shot = true
-
-[node name="SitAttack" type="Node" parent="StateMachine"]
+[node name="SitAttack" parent="StateMachine" instance=ExtResource("12_l4s58")]
 script = ExtResource("14_gq3kd")
 
-[node name="ComboTimer" type="Timer" parent="StateMachine/SitAttack"]
-wait_time = 0.1
-one_shot = true
+[node name="AttackDebounce" parent="StateMachine/SitAttack" index="1"]
+wait_time = 0.3
 
-[node name="AttackDebounce" type="Timer" parent="StateMachine/SitAttack"]
-wait_time = 0.35
-one_shot = true
+[editable path="StateMachine/SitAttack"]

@@ -1,15 +1,5 @@
 # Attack3.gd
-extends State
-
-@onready var comboTimer = $ComboTimer
-
-var finished_attacking: bool
-var rushed_state: String
-
-func enter(_msg := {}) -> void:
-	finished_attacking = false
-	rushed_state = ""
-	owner.velocity = Vector2.ZERO
+extends AbstractAttack
 
 func handle_input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("player_jump"):
@@ -25,7 +15,3 @@ func update(_delta: float) -> void:
 			state_machine.transition_to(rushed_state)
 		if comboTimer.is_stopped():
 			state_machine.transition_to("Idle")
-
-func _finished_attack3():
-	finished_attacking = true
-	comboTimer.start()
