@@ -463,6 +463,7 @@ animation = &"Sitting"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3mnft"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_xabnw"]
+switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_m0ebo"]
 states/Attack/node = SubResource("AnimationNodeAnimation_psd26")
@@ -608,3 +609,7 @@ one_shot = true
 
 [node name="SitAttack" type="Node" parent="StateMachine"]
 script = ExtResource("14_gq3kd")
+
+[node name="AttackDebounce" type="Timer" parent="StateMachine/SitAttack"]
+wait_time = 0.25
+one_shot = true

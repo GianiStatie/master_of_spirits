@@ -8,6 +8,7 @@ extends CharacterBody2D
 @onready var stateMachine = $StateMachine
 
 @onready var runState = $StateMachine/Run
+@onready var sitAttackState = $StateMachine/SitAttack
 
 var input_vector = Vector2.ZERO
 
@@ -16,7 +17,7 @@ var state_values = {
 	"input_vector": "not_set",
 	"velocity": "not_set",
 	"should_drift": "not_set",
-	"is_on_floor": "not_set"
+	"is_on_floor": "not_set",
 }
 
 func _process(_delta):
@@ -25,7 +26,8 @@ func _process(_delta):
 	
 	state_values["input_vector"] = str(input_vector)
 	state_values["velocity"] = str(velocity)
-	state_values["should_drift"] = str(runState.should_drift)
+#	state_values["should_drift"] = str(runState.should_drift)
+	state_values["should_drift"] = str(sitAttackState.finished_attacking)
 	state_values["state"] = stateMachine.state.name
 	state_values["is_on_floor"] = str(is_on_floor())
 	debugConsole.set_values(state_values)
