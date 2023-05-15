@@ -2,6 +2,7 @@
 extends State
 
 @onready var comboTimer = $ComboTimer
+@onready var attackDebounce = $AttackDebounce
 
 var finished_attacking: bool
 var rushed_state: String
@@ -9,6 +10,7 @@ var rushed_state: String
 func enter(_msg := {}) -> void:
 	finished_attacking = false
 	rushed_state = ""
+	attackDebounce.start()
 	owner.velocity = Vector2.ZERO
 
 func handle_input(_event: InputEvent) -> void:
@@ -27,6 +29,8 @@ func update(_delta: float) -> void:
 			state_machine.transition_to(rushed_state)
 		if comboTimer.is_stopped():
 			state_machine.transition_to("Idle")
+	if attackDebounce.is_stopped():
+		state_machine.transition_to("Idle")
 
 func _finished_attack1():
 	finished_attacking = true

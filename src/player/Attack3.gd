@@ -7,8 +7,8 @@ var finished_attacking: bool
 var rushed_state: String
 
 func enter(_msg := {}) -> void:
-	rushed_state = ""
 	finished_attacking = false
+	rushed_state = ""
 	owner.velocity = Vector2.ZERO
 
 func handle_input(_event: InputEvent) -> void:
